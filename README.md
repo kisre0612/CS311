@@ -1,1 +1,1 @@
-2022 Spring KAIST Computer Organization LAB
+2022 Spring KAIST CS311 LAB

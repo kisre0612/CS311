@@ -1,0 +1,61 @@
+CS311 Project3-MIPS-Pipelined
+20200136 김인성
+
+"run.c"
+void		IF_Stage();
+In IF Stage, I checked if jump has occurred or forwarding is needed.
+Then, I passed the information of the instruction to ID Stage.
+void		ID_Stage();
+In ID Stage, I decoded the fetched instruction and stored them in registers in ID_EX latch.
+Then, checked if the instruction is jump, and stored the information in ID_EX_DEST.
+void		EX_Stage();
+In EX Stage, I got values from rs and rt. Then, I checked if forwarding is needed.
+Last, I operated ALU operation and calculated addresses for lw, sw operations in the function 'operation'.
+void		MEM_Stage();
+In MEM Stage, I read the memory using 'mem_read_32' if it is a load, wrote the memory using 'mem_write_32' if it is a store.
+I also flushed the IF, ID, EX Stage of the pipeline if the branch is taken.
+void		WB_Stage();
+In WB Stage, I wrote back the result to the register for instructions except jump, branch, and store.
+Then, I incremented INSTRUCTION_COUNT.
+int         check_run_bit(int stage);
+This is a function that checks whether we should execute each stage.
+It checks if the program counter of current state is in the appropriate region.
+Also, it checks whether each stage has instruction to apply.
+void        flush_pipeline();
+This is a function to flush pipelines if branch is taken.
+void        operation(uint32_t reg1, uint32_t reg2);
+This is a function used for ALU operation and calculating addresses.
+
+"util.h"
+uint32_t IF_ID_INST; : used to check if IF Stage needs to fetch the instruction. If 1, IF Stage returns.
+uint32_t IF_ID_NPC; : used to pass instruction info to ID Stage.
+uint32_t ID_EX_NPC; : used to pass instruction info to EX Stage.
+uint32_t ID_EX_REG1; : did not use this register. just included in the first skeleton file.
+uint32_t ID_EX_REG2; : did not use this register. just included in the first skeleton file.
+uint32_t ID_EX_OPCODE; : used to store opcode info of the instruction.
+uint32_t ID_EX_RS; : used to store rs info of the instruction.
+uint32_t ID_EX_RT; : used to store rt info of the instruction.
+uint32_t ID_EX_RD; : used to store rd info of the instruction.
+uint32_t ID_EX_IMM; : used to store immediate value of the instruction.
+uint32_t ID_EX_SHAMT; : used to store shift amount of the instruction.
+uint32_t ID_EX_FUNC; : used to store function code of the instruction.
+unsigned char ID_EX_DEST; : used to store if the instruction is jump in ID Stage.
+uint32_t EX_MEM_NPC; : used to pass instruction info to MEM Stage.
+uint32_t EX_MEM_ALU_OUT; : used to store the result of ALU operation.
+uint32_t EX_MEM_W_VALUE; : used to store the write value of the store instruction.
+uint32_t EX_MEM_BR_TARGET; : used to store branch target address.
+uint32_t EX_MEM_BR_TAKE; : used to indicate if branch is taken. 
+unsigned char EX_MEM_DEST; : used to store destination register info after ALU operation of each instruction.
+uint32_t MEM_WB_NPC; : used to pass instruction info to WB Stage.
+uint32_t MEM_WB_ALU_OUT; : used to store ALU information to write back to the register in WB Stage.
+uint32_t MEM_WB_MEM_OUT; : used to store memory information to write back to the register in WB Stage.
+uint32_t MEM_WB_BR_TAKE; : did not use this register. just included in the first skeleton file.
+unsigned char MEM_WB_DEST; : used to store register info which I should write back in WB Stage.
+unsigned char EX_MEM_FORWARD_REG; : all instructions except jump, branch, store is forwarded if needed.
+unsigned char MEM_WB_FORWARD_REG; : used to store if forwarding is occurred to MEM_WB region.
+uint32_t EX_MEM_FORWARD_VALUE; : did not use this register. just included in the first skeleton file.
+uint32_t MEM_WB_FORWARD_VALUE; : did not use this register. just included in the first skeleton file.
+
+"run.h"
+=> nothing changed, only added function names used at run.c
+
